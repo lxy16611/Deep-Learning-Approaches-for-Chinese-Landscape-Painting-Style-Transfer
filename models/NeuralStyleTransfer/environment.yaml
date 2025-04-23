@@ -1,0 +1,16 @@
+name: project_early
+channels:
+  - defaults
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - tqdm
+  - pillow
+  - matplotlib
+  - torchvision
+  - pip:
+    - torch==2.2.0
+    - argparse
