@@ -9,7 +9,7 @@ import numpy as np
 loss_fn = lpips.LPIPS(net='alex')
 
 # Paths
-img_dir = "../models/Paint-CUT/experiments/jli3158/test"
+img_dir = "./test"
 real_images = [f for f in os.listdir(img_dir) if "_X_" in f]
 gen_images = [f for f in os.listdir(img_dir) if "_Y_fake_" in f]
 
@@ -31,6 +31,8 @@ for fname in real_images:
 real_imgs = torch.cat(real_imgs, dim=0)
 
 # Loop over generated images
+min_distances = []
+
 for gen_name in gen_images:
     gen_img = transform(Image.open(os.path.join(img_dir, gen_name)).convert('RGB')).unsqueeze(0)
 
@@ -42,5 +44,12 @@ for gen_name in gen_images:
 
     # Find best match
     min_idx = int(np.argmin(distances))
-    print(f"Nearest neighbor to {gen_name} is {real_names[min_idx]} with distance {distances[min_idx]:.4f}")
+    min_distance = distances[min_idx]
+    min_distances.append(min_distance)
+
+    print(f"Nearest neighbor to {gen_name} is {real_names[min_idx]} with distance {min_distance:.4f}")
+
+# Calculate average LPIPS distance
+avg_distance = np.mean(min_distances)
+print(f"\nAverage minimum LPIPS distance: {avg_distance:.4f}")
 
